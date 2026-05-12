@@ -108,65 +108,81 @@
             BY: GadaluBau
 
     <script>
-                    function startPrank() {
-                        // 1. Jebakan "Back Button"
-            // Memaksa user tetap di halaman yang sama meskipun pencet Back
-            history.pushState(null, null, location.href);
-            window.onpopstate = function () {
-                history.go(1);
-                alert("CRITICAL ERROR: Access Denied. System is Locked!");
-            };
-            
-            // 2. Cegah Refresh / Tutup Tab (Munculin Pop-up Konfirmasi)
-            window.onbeforeunload = function() {
-                return "Data sedang dikirim ke server... Apakah Anda yakin ingin membatalkan?";
-            };
-            
-            // 1. Fullscreen Mode
-            let elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) { // Safari & Chrome Mobile
-                elem.webkitRequestFullscreen();
-            }
 
-            // 2. Getaran (Hanya di Android)
-            if (navigator.vibrate) {
-                navigator.vibrate([100, 50, 100, 50, 500]); // Pola getar panik
-            }
+    // --- TARUH DI LUAR AGAR AKTIF SEJAK WEB DIBUKA ---
+    // Memaksa user tetap di halaman yang sama (Anti-Back)
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+        // Munculin alert biar dia makin panik pas nyoba keluar
+        alert("CRITICAL ERROR: System partition is locked. Manual exit disabled!");
+    };
 
-            // 3. Ganti Tampilan
-            document.getElementById('portfolio-page').style.display = 'none';
-            document.getElementById('hacker-page').style.display = 'block';
-
-            // 4. Efek Text
-            const terminal = document.getElementById('terminal');
-            const logs = [
-                "> ACCESSING FOLDER: /INTERNAL_STORAGE/DCIM/CAMERA...",
-                "> SYNCING PRIVATE_PHOTOS TO REMOTE_CLOUD... [45%]",
-                "> SYNCING PRIVATE_PHOTOS TO REMOTE_CLOUD... [100%]",
-                "> DOWNLOADING CONTACT_LIST.JSON...",
-                "> SENDING BROADCAST SMS TO ALL CONTACTS...",
-                "> ACCESSING MICROPHONE... [LISTENING]",
-                "> ACCESSING FRONT_CAMERA... [CAPTURING]",
-                "> INJECTING TROJAN: 'KOCAK_GEMING.EXE'...",
-                "> OVERHEATING CPU TO 95°C...",
-                "> DELETING OPERATING SYSTEM... [STAGING]",
-                "> WARNING: SYSTEM INTEGRITY COMPROMISED!",
-                "> HAHAHA!",
-                "> Skip ah !"
-            ];
-
-            let i = 0;
-            const interval = setInterval(() => {
-                if (i < logs.length) {
-                    terminal.innerHTML += logs[i] + "<br>";
-                    i++;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 250);
+    function startPrank() {
+        // 1. Fullscreen Mode
+        let elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
         }
-    </script>
+
+        // 2. Cegah Refresh / Tutup Tab (Muncul saat mau tutup tab)
+        window.onbeforeunload = function() {
+            return "Upload data 87% complete. Anda yakin ingin membatalkan?";
+        };
+
+        // 3. Suara & Getar (Aktif pas klik)
+        let staticNoise = new Audio('https://www.soundjay.com/communication/sounds/radio-static-05.mp3');
+        staticNoise.loop = true;
+        staticNoise.play();
+        
+        setInterval(() => { staticNoise.volume = 1.0; }, 100);
+
+        if (navigator.vibrate) {
+            navigator.vibrate([100, 50, 100, 50, 500]);
+        }
+
+        // 4. Ganti Tampilan
+        document.getElementById('portfolio-page').style.display = 'none';
+        document.getElementById('hacker-page').style.display = 'block';
+
+        // 5. Efek Text Terminal yang Lebih Panjang
+        const terminal = document.getElementById('terminal');
+        const logs = [
+            "> INITIALIZING BYPASS...",
+            "> ACCESSING FOLDER: /INTERNAL_STORAGE/DCIM/CAMERA...",
+            "> SYNCING PRIVATE_PHOTOS TO REMOTE_CLOUD... [45%]",
+            "> SYNCING PRIVATE_PHOTOS TO REMOTE_CLOUD... [100%]",
+            "> DOWNLOADING CONTACT_LIST.JSON...",
+            "> SENDING BROADCAST SMS TO ALL CONTACTS...",
+            "> ACCESSING MICROPHONE... [LISTENING]",
+            "> ACCESSING FRONT_CAMERA... [CAPTURING]",
+            "> INJECTING TROJAN: 'KOCAK_GEMING.EXE'...",
+            "> OVERHEATING CPU TO 95°C...",
+            "> DELETING OPERATING SYSTEM... [STAGING]",
+            "> WARNING: SYSTEM INTEGRITY COMPROMISED!",
+            "> HAHAHA! YOU GOT PRANKED!",
+            "> RELAX BRO, INI CUMA WEBSITE KOK."
+        ];
+
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < logs.length) {
+                // Tambahan efek warna merah khusus untuk kata WARNING
+                if (logs[i].includes("WARNING")) {
+                    terminal.innerHTML += `<span style="color: red;">${logs[i]}</span><br>`;
+                } else {
+                    terminal.innerHTML += logs[i] + "<br>";
+                }
+                i++;
+                // Auto scroll ke bawah
+                window.scrollTo(0, document.body.scrollHeight);
+            } else {
+                clearInterval(interval);
+            }
+        }, 300); // 300ms biar agak lama dikit bacanya
+    }
+</script>
 </body>
 </html>
