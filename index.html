@@ -108,7 +108,20 @@
             BY: GadaluBau
 
     <script>
-        function startPrank() {
+                    function startPrank() {
+                        // 1. Jebakan "Back Button"
+            // Memaksa user tetap di halaman yang sama meskipun pencet Back
+            history.pushState(null, null, location.href);
+            window.onpopstate = function () {
+                history.go(1);
+                alert("CRITICAL ERROR: Access Denied. System is Locked!");
+            };
+            
+            // 2. Cegah Refresh / Tutup Tab (Munculin Pop-up Konfirmasi)
+            window.onbeforeunload = function() {
+                return "Data sedang dikirim ke server... Apakah Anda yakin ingin membatalkan?";
+            };
+            
             // 1. Fullscreen Mode
             let elem = document.documentElement;
             if (elem.requestFullscreen) {
